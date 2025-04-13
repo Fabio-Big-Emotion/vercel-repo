@@ -1,6 +1,5 @@
 'use client';
 
-
 import { motion } from "framer-motion";
 
 export default function Home() {
@@ -21,7 +20,10 @@ export default function Home() {
                 initial={{ scale: 0.4, opacity: 0 }}
                 animate={{ scale: 1.2, opacity: 1 }}
                 transition={{ duration: 1.5, ease: "easeInOut" }}
-                className="text-4xl font-bold text-white ">Je t'aime</motion.p>
+                className="text-4xl font-bold text-white "
+            >
+                Je t&apos;aime
+            </motion.p>
         </div>
     );
 }
