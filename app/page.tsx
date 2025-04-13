@@ -18,7 +18,7 @@ export default function Home() {
 
             {/* Texte par-dessus */}
             <motion.p
-                initial={{ scale: 0.5, opacity: 0 }}
+                initial={{ scale: 0.4, opacity: 0 }}
                 animate={{ scale: 1.2, opacity: 1 }}
                 transition={{ duration: 1.5, ease: "easeInOut" }}
                 className="text-4xl font-bold text-white ">Je t'aime</motion.p>
