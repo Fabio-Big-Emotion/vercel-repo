@@ -30,7 +30,7 @@ export default function NewsletterForm() {
 
     return (
         <div className="p-6 max-w-md mx-auto">
-            <h2 className="text-xl font-bold mb-4">Inscription à la newsletter</h2>
+            <h2 className="text-xl font-bold mb-4">Inscription à la newsletter !</h2>
             <input
                 type="email"
                 value={email}
