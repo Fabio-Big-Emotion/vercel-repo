@@ -2,64 +2,46 @@
 
 import { useState } from 'react';
 
-export default function Home() {
+export default function NewsletterForm() {
     const [email, setEmail] = useState('');
-    const [name, setName] = useState('');
     const [status, setStatus] = useState('');
 
-    const handleSend = async () => {
-        setStatus('Envoi en cours...');
+    const handleSubscribe = async () => {
+        setStatus('Inscription en cours...');
         try {
-            const response = await fetch('/api/send-email', {
+            const res = await fetch('/api/subscribe', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    toEmail: email,
-                    name,
-                    variables: {
-                        name,
-                        code: 'ABC123'
-                    }
-                }),
+                body: JSON.stringify({ email }),
             });
 
-            if (response.ok) {
-                setStatus('✅ Email envoyé avec succès !');
+            const data = await res.json();
+            if (res.ok) {
+                setStatus(data.message);
             } else {
-                const error = await response.json();
-                setStatus(`❌ Erreur : ${error.message || 'inconnue'}`);
+                setStatus(`Erreur : ${data.error || '❌'}`);
             }
         } catch (err) {
-            setStatus(`❌ Erreur : ${err}`);
+            setStatus(`Erreur : ${err}`);
         }
     };
 
     return (
-        <main className="p-6 max-w-xl mx-auto">
-            <h1 className="text-2xl font-bold mb-4">Test d’envoi d’email Mailjet</h1>
+        <div className="p-6 max-w-md mx-auto">
+            <h2 className="text-xl font-bold mb-4">Inscription à la newsletter</h2>
             <input
                 type="email"
-                placeholder="Email du destinataire"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                placeholder="Votre adresse email"
                 className="border p-2 w-full mb-2"
             />
-            <input
-                type="text"
-                placeholder="Nom du destinataire"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="border p-2 w-full mb-4"
-            />
-            <button
-                onClick={handleSend}
-                className="bg-blue-600 text-white px-4 py-2 rounded"
-            >
-                Envoyer l’email
+            <button onClick={handleSubscribe} className="bg-blue-600 text-white px-4 py-2 rounded">
+                S’inscrire
             </button>
             {status && <p className="mt-4">{status}</p>}
-        </main>
+        </div>
     );
 }
