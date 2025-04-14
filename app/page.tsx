@@ -1,55 +1,65 @@
 'use client';
 
-import { motion } from "framer-motion";
+import { useState } from 'react';
 
 export default function Home() {
-    // Liste des emojis
-    const emojis = Array(20).fill("💩");
+    const [email, setEmail] = useState('');
+    const [name, setName] = useState('');
+    const [status, setStatus] = useState('');
 
-    // Générer une position aléatoire à chaque fois qu'un emoji apparaît
-    const getRandomPosition = () => {
-        return {
-            x: Math.random() * 100 - 50, // position horizontale aléatoire entre -50 et 50
-            y: Math.random() * 100 - 50, // position verticale aléatoire entre -50 et 50
-        };
+    const handleSend = async () => {
+        setStatus('Envoi en cours...');
+        try {
+            const response = await fetch('/api/send-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    toEmail: email,
+                    name,
+                    variables: {
+                        name,
+                        code: 'ABC123'
+                    }
+                }),
+            });
+
+            if (response.ok) {
+                setStatus('✅ Email envoyé avec succès !');
+            } else {
+                const error = await response.json();
+                setStatus(`❌ Erreur : ${error.message || 'inconnue'}`);
+            }
+        } catch (err) {
+            setStatus(`❌ Erreur : ${err}`);
+        }
     };
 
     return (
-        <div className="flex justify-center items-center h-screen bg-white overflow-hidden relative">
-
-            {emojis.map((emoji, index) => {
-                const randomPosition = getRandomPosition();
-
-                return (
-                    <motion.div
-                        key={index}
-                        initial={{ opacity: 0, scale: 0 }}
-                        animate={{
-                            opacity: 1,
-                            scale: 1.5,
-                            x: randomPosition.x + "vw",  // position horizontale aléatoire
-                            y: randomPosition.y + "vh",  // position verticale aléatoire
-                        }}
-                        transition={{
-                            duration: 2,
-                            delay: Math.random(),  // Délai aléatoire pour l'apparition
-                            ease: "easeInOut",
-                        }}
-                        className="absolute text-5xl z-10"
-                    >
-                        {emoji}
-                    </motion.div>
-                );
-            })}
-
-            <motion.p
-                initial={{ scale: 0.4, opacity: 0 }}
-                animate={{ scale: 1.2, opacity: 1 }}
-                transition={{ duration: 1.5, ease: "easeInOut" }}
-                className="text-4xl font-bold text-[#654321] "
+        <main className="p-6 max-w-xl mx-auto">
+            <h1 className="text-2xl font-bold mb-4">Test d’envoi d’email Mailjet</h1>
+            <input
+                type="email"
+                placeholder="Email du destinataire"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="border p-2 w-full mb-2"
+            />
+            <input
+                type="text"
+                placeholder="Nom du destinataire"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="border p-2 w-full mb-4"
+            />
+            <button
+                onClick={handleSend}
+                className="bg-blue-600 text-white px-4 py-2 rounded"
             >
-                Lele le pet
-            </motion.p>
-        </div>
+                Envoyer l’email
+            </button>
+            {status && <p className="mt-4">{status}</p>}
+        </main>
     );
 }
