@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 import Mailjet from 'node-mailjet';
 
+
 console.log('🔐 MJ_APIKEY_PUBLIC (MAILJET_API_KEY) :', process.env.MAILJET_API_KEY?.slice(0, 4) + '...');
+console.log('🔐 MJ_APIKEY_PRIVATE (MAILJET_API_SECRET) :', process.env.MAILJET_API_SECRET?.slice(0, 4) + '...');
 
 const mailjet = Mailjet.apiConnect(
     process.env.MAILJET_API_KEY || '',
